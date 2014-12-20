@@ -12,6 +12,10 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+// This class is used to create visual trees for a group of text files with the
+// data stored in SSF (Shakti Standard Format). The class makes use of the 
+// dependency relations between the word groups to create a tree a like 
+//structure
 public class DependencyTree extends JFrame {
 
 	String inputFolderName;
@@ -19,14 +23,19 @@ public class DependencyTree extends JFrame {
 	JTree visualTree;
 	DefaultMutableTreeNode mainNode;
 	DefaultMutableTreeNode folderNode;
-
+	
+	// This is a constructor function used to set the value of the
+	// input directory to the the text files from 
 	DependencyTree(String inputFolder) {
 		inputFolderName = inputFolder;
 		fileContent = new ArrayList<String>();
 		mainNode = null;
 		folderNode = new DefaultMutableTreeNode("data");
 	}
-
+	
+	// This funtion is used to open the files stored in the input
+	// directory and call the function to extract the tree values
+	// from the data files
 	public void openFiles() throws FileNotFoundException {
 
 		File folder = new File(inputFolderName);
@@ -44,6 +53,9 @@ public class DependencyTree extends JFrame {
 		this.setVisible(true);
 	}
 
+	// This function takes a single SSF file as an input and put all the 
+	// data in the file in a single ArrayList type datasturucture (in order
+	// to ease compuations)
 	public void getDependencyTrees(File f) throws FileNotFoundException {
 
 		fileContent = new ArrayList<String>();
@@ -55,23 +67,29 @@ public class DependencyTree extends JFrame {
 		extractTrees(fileContent);
 	}
 
+	// This file is used to divide an input files (consisting of a
+	// number of sentences) to sentence level data and make the parent nodes
+	// for each of the sentence 
 	public void extractTrees(ArrayList<String> content) {
 
 		String sentenceID = "";
 		ArrayList<String> sentence = new ArrayList<String>();
 		for (int i = 0; i < content.size(); i++) {
-			if (content.get(i).matches("<Sentence id=(.*)") == true) {
+			if (content.get(i).matches("<Sentence id=(.*)") == 
+					true){
 				sentenceID = content.get(i);
 				i++;
-				while (content.get(i).contains("</Sentence>") == false) {
+				while (content.get(i).contains("</Sentence>") ==
+						 false) {
 					sentence.add(content.get(i));
 					i++;
 				}
 			}
-			if (sentence.isEmpty() == false) {
-				System.out.println(sentenceID);
-				DefaultMutableTreeNode sentenceLevel = new DefaultMutableTreeNode(sentenceID);
-				ArrayList<DefaultMutableTreeNode> shoots=getDependencies(sentence,sentenceLevel);
+			if (sentence.isEmpty() == false) {	
+				DefaultMutableTreeNode sentenceLevel = 
+					new DefaultMutableTreeNode(sentenceID);
+				ArrayList<DefaultMutableTreeNode> shoots = 
+					getDependencies(sentence,sentenceLevel);
 				for(int j=0;j<shoots.size();j++)
 					sentenceLevel.add(shoots.get(j));
 				mainNode.add(sentenceLevel);
@@ -80,21 +98,27 @@ public class DependencyTree extends JFrame {
 
 		}
 	}
-
-	public ArrayList<DefaultMutableTreeNode> getDependencies(ArrayList<String> sentence,
+	
+	// This function is called to extract the tree data for each sentence
+	// level data and put them into a tree format
+	public ArrayList<DefaultMutableTreeNode> getDependencies(
+			ArrayList<String> sentence,
 			DefaultMutableTreeNode sentenceLevel) {
 
 		String chunkID = "";
 		String chunk = "";
 		String rel = "";
-		ArrayList<DefaultMutableTreeNode> nodes=new ArrayList<DefaultMutableTreeNode>();
+		ArrayList<DefaultMutableTreeNode> nodes = new 
+				ArrayList<DefaultMutableTreeNode>();
 		for(int i=0;i<sentence.size();i++){
-			
-			if(sentence.get(i).contains("((")==true && sentence.get(i).contains("drel=")==false){
+			if(sentence.get(i).contains("((")==true && 
+					sentence.get(i).contains("drel=") == 
+					false){
 				chunk=getChunk(sentence,i);
 				chunkID=getChunkId(sentence.get(i));
 				String ch = chunkID+" ("+chunk+")";
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(ch);
+				DefaultMutableTreeNode node = 
+					new DefaultMutableTreeNode(ch);
 				getShoots(chunkID,sentence,node);
 				nodes.add(node);
 				chunkID="";
@@ -105,21 +129,28 @@ public class DependencyTree extends JFrame {
 		return nodes;
 	}
 	
-	public void getShoots(String chunkID,ArrayList<String>sentence,DefaultMutableTreeNode root){
-		
+	// This function is used to get the shoots of a node in a dependency
+	// tree
+	public void getShoots(String chunkID,ArrayList<String>sentence, 
+			DefaultMutableTreeNode root){
 		for(int i=0;i<sentence.size();i++){
-			if(sentence.get(i).matches(String.format("(.*) drel='(.*):%s'(.*)",
+			if(sentence.get(i).matches(String.format(
+					"(.*) drel='(.*):%s'(.*)",
 					chunkID))==true){
 				String chunkid=getChunkId(sentence.get(i));
 				String chunk=getChunk(sentence,i);
 				String relation=getRelation(sentence.get(i));
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(chunkid+"->"+relation+" ["+chunk+"]");
+				DefaultMutableTreeNode node = 
+					new DefaultMutableTreeNode(
+					chunkid+"->"+relation+" ["+chunk+"]");
 				root.add(node);
 				getShoots(chunkid,sentence,node);
 			}
 		}
 	}
-		
+	
+	// This function is used to extract the dependeny relation that
+	// a given node shares with its parent
 	public String getRelation(String line) {
 
 		Scanner sc = new Scanner(line);
@@ -130,7 +161,9 @@ public class DependencyTree extends JFrame {
 		}
 		return "";
 	}
-
+	
+	// This function is used to extract the data related to all the chunk
+	// members of the given word group (simple raw data is extracted)
 	public String getChunk(ArrayList<String> sentence, int index) {
 
 		String chunk = "";
@@ -142,7 +175,9 @@ public class DependencyTree extends JFrame {
 		}
 		return chunk.trim();
 	}
-
+	
+	// This function is used to extract the chunk ID of a given word
+	// group
 	public String getChunkId(String line) {
 
 		Scanner sc = new Scanner(line);
