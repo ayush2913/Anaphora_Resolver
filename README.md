@@ -9,15 +9,16 @@ Processing. Anaphora is an expression that refers to another expression
 (Antecedent) that has occured previously.
 
 	Example
-	Ram saw a *laptop* yesterday. He wants to buy it.
+	Ram saw a laptop yesterday. He wants to buy it.
 	
 In the above example we have 2 anaphoras, *He* and *it*. Now, with our world 
-knowledge we already know that **He** refers to *Ram* and similarly, *it* 
+knowledge we already know that *He* refers to *Ram* and similarly, *it* 
 refers to *laptop*. To resolve such relations in a large text corpus (Hindi)
 is called Anaphora Resolution
 
 An anaphora in Hindi can be divided into 3 types (though not a stict
 categorization).
+
 1. Entity type anaphora (eg. usne, use, mein, vah, etc) which always refers to 
    an entity type word group such as Person, Organizations, Places, etc.
 2. Event type anaphora (eg. yeh, iske baad, isliye, etc), which always refer to
@@ -50,6 +51,7 @@ courpus and other relavent information such as name entity tags, reference to
 the anaphoras (manually marked for developing the training data, etc).
 
 So, each line can convey either one of the four informations:
+
 1. Details of the file, such as the source and authur of the file
 2. Indicator to the start or end of the sentence.
 3. Features corresponding to the word groups (also called chunks)
@@ -63,7 +65,7 @@ extract such data easily by using few simple lines of codes:
 1. Make an object of the class SSFextract to call all the functions
    associated with the class
 	
-	SSFextract data = new SSFextract(<SSF line>, <flag>)
+	SSFextract data = new SSFextract("SSF line");
 
 Now, this object will take an argument which is the line from which the data has
 to be extracted.
