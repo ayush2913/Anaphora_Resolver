@@ -65,12 +65,12 @@ extract such data easily by using few simple lines of codes:
 1. Make an object of the class SSFextract to call all the functions
    associated with the class
 	
-	SSFextract data = new SSFextract("SSF line");
+	`SSFextract data = new SSFextract("SSF line");`
 
 Now, this object will take an argument which is the line from which the data has
 to be extracted.
 
 2. Now, appropriate features can be extracted using this object, `data`.
 
-	String headChunkID = data.headChunkID;   
+	`String headChunkID = data.headChunkID;`   
   
