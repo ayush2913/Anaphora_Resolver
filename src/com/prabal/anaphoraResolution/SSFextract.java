@@ -7,18 +7,15 @@ import java.util.Scanner;
 // in it such as the gender, number, position of the word in the sentence.
 public class SSFextract {
 	String inputLine;
-	char lineType;
 	String chunkPOS, headChunkID, drel, parentID;
-	String word, subPosTag, root, wordGroup, gender, number, person, caseMarker
-	, tamHindi, tamWx; 
+	String word, subPosTag, root, wordGroup, gender, number, person, 
+	caseMarker, tamHindi, tamWx; 
 	int position;
 	
-	// This is a class constructor that is used to set the values of the string
-	// line from SSF and the type of line (header or non-header) taken as 
-	// arguments
-	SSFextract(String line, char flag){
+	// This is a class constructor that is used to set the values of the 
+	// string line of SSF
+	SSFextract(String line){
 		inputLine = line;
-		lineType = flag;
 		chunkPOS = headChunkID = drel = parentID = "";
 		word = subPosTag = root = wordGroup = gender = number = person =
 				caseMarker = tamHindi = tamWx = "";
@@ -29,7 +26,8 @@ public class SSFextract {
 	// This function is used to call two different functions depending upon
 	// the type of line (header or non-header)
 	public void callExtractFunctions(){
-		if(lineType == 'h' || lineType == 'H')
+		if(inputLine.contains("drel=") == true && 
+				inputLine.contains("((")==true)
 			extractMembersHead(inputLine);
 		else
 			extractMembersNonHead(inputLine);
@@ -54,9 +52,9 @@ public class SSFextract {
 		scn.close();
 	}
 	
-	// This function is used to extract values: root of the word, word group to 
-	// which it belongs, gender, number, person, case (direct or oblique),
-	// TAM in both Hindi and WX format and the position of the word in the 
+	// This function is used to extract values: root of the word, word group
+	// to which it belongs, gender, number, person, case (direct or oblique)
+	// ,TAM in both Hindi and WX format and the position of the word in the 
 	// sentence
 	public void extractMembersNonHead(String line){
 		Scanner scn = new Scanner(line);
