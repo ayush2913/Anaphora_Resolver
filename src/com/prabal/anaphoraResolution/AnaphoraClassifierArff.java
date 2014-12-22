@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
+// This class makes an arff file (used for the training of the Weka learning) 
+// using a set of features 
 public class AnaphoraClassifierArff {
 
 	String inputDir;
@@ -17,16 +18,21 @@ public class AnaphoraClassifierArff {
 	int position;
 
 	File[] fileList;
-
+	
+	// This is a constructor that takes as an argument the name of the the
+	// directory that contains the files (SSF) for the training 
 	AnaphoraClassifierArff(String directoryName) {
 
 		inputDir = directoryName;
 
-		anaphoraString = drel = root = pos = gender = number = person = relation = preposition = lastword = result = "";
+		anaphoraString = drel = root = pos = gender = number = person = 
+			relation = preposition = lastword = result = "";
 		position = 0;
 
 	}
 	
+	// This function creates a file (arff) that contains the basic structure
+	// for the training data
 	public void designstructureOfArff(){
 		
 		File structure = new File("trainStructure.arff");
@@ -37,12 +43,14 @@ public class AnaphoraClassifierArff {
 			fw = new FileWriter("trainStructure.arff", true);
 			fw.write("@relation 'anaphora-antecedent'\n\n");
 			fw.write("@attribute anaphora string\n");
-			fw.write("@attribute tree_relation {k1,k2,k7,k7p,k7t,r6,nmod,vmod,OTH}\n");
+			fw.write("@attribute tree_relation{k1,k2,k7,k7p,k7t,r6"
+					+",nmod,vmod,OTH}\n");
 			fw.write("@attribute gender {m,f,any,X}\n");
 			fw.write("@attribute number {sg,pl,any,X}\n");
 			fw.write("@attribute person {1,1h,3,3h,2,2h,any,X}\n");
 			fw.write("@attribute relation {o,d,any,X}\n");
-			fw.write("@attribute preposition {0,meM,ne,ke,kA,ko,kO,se,me,eM,X}\n");
+			fw.write("@attribute preposition {0,meM,ne,ke,kA,ko,kO,"
+					+"se,me,eM,X}\n");
 			fw.write("@attribute position numeric\n");
 			fw.write("@attribute last_word {Y,N}\n");
 			fw.write("@attribute class {N,V,U}\n\n");
@@ -53,6 +61,8 @@ public class AnaphoraClassifierArff {
 		}
 	}
 
+	// This function is used to create the training file (to be passed to
+	// the learning algorithm) and the structure to the file is initialized
 	public void designFormat() {
 
 		File trainFile = new File("trainFile.arff");
@@ -64,12 +74,14 @@ public class AnaphoraClassifierArff {
 			fw = new FileWriter("trainFile.arff", true);
 			fw.write("@relation 'anaphora-antecedent'\n\n");
 			fw.write("@attribute anaphora string\n");
-			fw.write("@attribute tree_relation {k1,k2,k7,k7p,k7t,r6,nmod,vmod,OTH}\n");
+			fw.write("@attribute tree_relation {k1,k2,k7,k7p,k7t,r6"
+					+",nmod,vmod,OTH}\n");
 			fw.write("@attribute gender {m,f,any,X}\n");
 			fw.write("@attribute number {sg,pl,any,X}\n");
 			fw.write("@attribute person {1,1h,3,3h,2,2h,any,X}\n");
 			fw.write("@attribute relation {o,d,any,X}\n");
-			fw.write("@attribute preposition {0,meM,ne,ke,kA,ko,kO,se,me,eM,X}\n");
+			fw.write("@attribute preposition {0,meM,ne,ke,kA,ko,kO,"
+					+"se,me,eM,X}\n");
 			fw.write("@attribute position numeric\n");
 			fw.write("@attribute last_word {Y,N}\n");
 			fw.write("@attribute class {N,V,U}\n\n");
@@ -79,7 +91,9 @@ public class AnaphoraClassifierArff {
 			e.printStackTrace();
 		}
 	}
-
+	
+	// This function browses the training directory and creates a list of
+	// the files stored in the directory to be used later
 	public void getFileList() {
 
 		File dir = new File(inputDir);
@@ -90,6 +104,8 @@ public class AnaphoraClassifierArff {
 		}
 	}
 
+	// This funtion opens each file using the list of files created and
+	// calls the function extractChunks(file) for each entry in the list
 	public void getFileContent() {
 
 		for (int i = 0; i < fileList.length; i++) {
@@ -99,7 +115,9 @@ public class AnaphoraClassifierArff {
 
 		}
 	}
-
+	
+	// This file is used to extract word group units out of the the SSF
+	// files
 	public void extractChunks(File file) {
 
 		ArrayList<String> chunk = new ArrayList<String>();
@@ -130,19 +148,11 @@ public class AnaphoraClassifierArff {
 				checkForNullValues();
 
 					rationalizeDrel();
-					//rationalizePreposition();
-					// System.out.println(anaphoraString + "," + drel + "," +
-					// root
-					// + "," + pos + "," + gender + "," + number + ","
-					// + person + "," + relation + "," +preposition+","+
-					// position + ","
-					// + lastword + "," + result);
-					//
-
-					System.out.println(anaphoraString);
+				System.out.println(anaphoraString);
 					FileWriter fw;
 					try {
-						fw = new FileWriter("trainFile.arff", true);
+						fw = new
+							FileWriter("trainFile.arff", true);
 						fw.write(anaphoraString + "," + drel + "," + gender
 								+ "," + number + "," + person + "," + relation
 								+ "," + preposition + "," + position + ","
@@ -159,16 +169,9 @@ public class AnaphoraClassifierArff {
 
 	}
 	
-	public void rationalizePreposition(){
-		
-		if(preposition.equalsIgnoreCase("X")==false && preposition.equalsIgnoreCase("0")==false &&
-				preposition.equalsIgnoreCase("meM")==false && preposition.equalsIgnoreCase("ne")==false &&
-				preposition.equalsIgnoreCase("ke")==false && preposition.equalsIgnoreCase("kA")==false &&
-				preposition.equalsIgnoreCase("ko")==false && preposition.equalsIgnoreCase("se")==false)
-			preposition = preposition+"__OTH";
-	}
-
-	public void rationalizeDrel() {
+	// This function is used to assign the value fo "OTH" to relations that
+	// lies in the minority category
+	public void rationalizeDrel(){
 
 		if (drel.equalsIgnoreCase("k1") == false
 				&& drel.equalsIgnoreCase("k2") == false
@@ -181,7 +184,9 @@ public class AnaphoraClassifierArff {
 			drel = "OTH";
 
 	}
-
+	
+	// This funtion is used to give a value of "X" to all the features for
+	// which there is no value assigned in the SSF file
 	public void checkForNullValues() {
 
 		if (gender.equalsIgnoreCase("") == true)
@@ -195,14 +200,20 @@ public class AnaphoraClassifierArff {
 		if (preposition.equalsIgnoreCase("") == true)
 			preposition = "X";
 	}
-
+	
+	// This file is used to initialise all the extracted features to null
+	// values so that the last values do not interfere with the to be
+	// extracted values
 	public void initializeAllFeatures() {
 
-		anaphoraString = drel = root = pos = gender = number = person = relation = preposition = lastword = result = "";
+		anaphoraString = drel = root = pos = gender = number = person = 
+			relation = preposition = lastword = result = "";
 		position = 0;
 
 	}
 
+	// This funtion takes a word group data as an argument and returns TRUE
+	// if the group contains an anaphora
 	public boolean checkForAnaphora(ArrayList<String> chunk) {
 
 		for (int i = 0; i < chunk.size(); i++) {
@@ -213,6 +224,10 @@ public class AnaphoraClassifierArff {
 		return false;
 	}
 
+	
+	// This function is used to take a file as an argument and extracts the
+	// useful values from a file (SSF) from which the training file is
+	// created
 	public void getContentForArff(ArrayList<String> chunk) {
 
 		for (int i = 0; i < chunk.size(); i++) {
@@ -226,7 +241,8 @@ public class AnaphoraClassifierArff {
 				while (scn.hasNext()) {
 
 					String word = scn.next();
-					if (word.equalsIgnoreCase("drel=") == true) {
+					if (word.equalsIgnoreCase("drel=") == 
+							true) {
 						drel = scn.next();
 					}
 				}
@@ -240,7 +256,8 @@ public class AnaphoraClassifierArff {
 				while (scn.hasNext()) {
 
 					String word = scn.next();
-					if (word.equalsIgnoreCase("af=") == true) {
+					if (word.equalsIgnoreCase("af=") == 
+							true) {
 						root = scn.next();
 						pos = scn.next();
 						gender = scn.next();
@@ -250,18 +267,23 @@ public class AnaphoraClassifierArff {
 						scn.next();
 						preposition = scn.next();
 					}
-					if (word.equalsIgnoreCase("name=") == true)
+					if (word.equalsIgnoreCase("name=") == 
+							true)
 						anaphoraString = scn.next();
 
-					if (word.equalsIgnoreCase("posn=") == true)
-						position = Integer.parseInt(scn.next());
+					if (word.equalsIgnoreCase("posn=") == 
+							true)
+						position = Integer.parseInt(
+								scn.next());
 
-					if (word.equalsIgnoreCase("reftype=") == true) {
+					if (word.equalsIgnoreCase("reftype=") == 
+							true) {
 						result = scn.next();
 						
 
 						i++;
-						if (chunk.get(i).contains("))") == true)
+						if (chunk.get(i).contains("))") 
+								== true)
 							lastword = "Y";
 						else
 							lastword = "N";

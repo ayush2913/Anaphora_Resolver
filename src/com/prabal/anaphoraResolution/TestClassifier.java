@@ -14,6 +14,7 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
+// This class is designed to test the classfier model on the test data
 public class TestClassifier {
 
 	int correctPredictions;
@@ -35,37 +36,41 @@ public class TestClassifier {
 	String inputDir;
 	String anaphoraString;
 	String sentenceID;
-	String chunkID,drel, root, pos, gender, number, person, relation, preposition,
-			lastword, result;
+	String chunkID,drel, root, pos, gender, number, person, relation, 
+	       preposition,lastword, result;
 	int position;
 
 	File[] fileList;
-
+	
+	// This is a contructor function that is used to set the path of the
+	// directory which contains the test files
 	TestClassifier(String directoryName) {
 		
 		predictedResult="";
 		correctPredictions=totalPredictions=0;
 		
-		entityCases = eventCases = correctEntityCases = correctEventCases =unknownCases=correctUnknownCases= 0;
+		entityCases = eventCases = correctEntityCases = correctEventCases
+		       	=unknownCases=correctUnknownCases= 0;
 
 		inputDir = directoryName;
 
-		anaphoraString = sentenceID= chunkID= drel = root = pos = gender = number = person = relation = preposition = lastword = result = "";
+		anaphoraString = sentenceID= chunkID= drel = root = pos = gender 
+			= number = person = relation = preposition = lastword 
+			= result = "";
 		position = 0;
 
 	}
 	
-	public void readModel() {// to read the model for the machine learning
-
+	// This function reads the model for the testing
+	public void readModel() {
 		try {
-			ObjectInputStream oin = new ObjectInputStream(new FileInputStream(
-					"train.model"));// TRAINED
-			// MODEL
+			ObjectInputStream oin = new ObjectInputStream(new 
+					FileInputStream(
+						"train.model"));// TRAINED MODEL
 			fClass = (FilteredClassifier) oin.readObject();
-			test_source = new DataSource( // FILE FOR STRUCTURE OF INSTANCE
+			test_source = new DataSource( // File for structure
 					"trainStructure.arff");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -74,14 +79,15 @@ public class TestClassifier {
 			int cIdx_train = test.numAttributes() - 1;
 			test.setClassIndex(cIdx_train);
 			instance = new Instance(test.numAttributes());
-			// System.out.println("Instance is  "+instance.toString());
+			//System.out.println("Instance is "+instance.toString());
 			instance.setDataset(test);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
+	
+	// This function is used to get the list of files stored in the test
+	// files directory
 	public void getFileList() {
 
 		File dir = new File(inputDir);
@@ -92,6 +98,7 @@ public class TestClassifier {
 		}
 	}
 
+	// This function is used to get open each file one by one using the list
 	public void getFileContent() {
 
 		for (int i = 0; i < fileList.length; i++) {
@@ -102,17 +109,24 @@ public class TestClassifier {
 		}
 	}
 	
+	// This function is used to display the final results obtained after
+	// testing the classifier model
 	public void displayResults(){
 		
 		System.out.println(correctPredictions);
 		System.out.println(totalPredictions);
 		double precision = (double) correctPredictions/totalPredictions;
-		System.out.println("Entity-->"+entityCases+"-->"+correctEntityCases);
-		System.out.println("Event-->"+eventCases+"-->"+correctEventCases);
-		System.out.println("Unknown-->"+unknownCases+"-->"+correctUnknownCases);
+		System.out.println("Entity-->"+entityCases+"-->"+
+				correctEntityCases);
+		System.out.println("Event-->"+eventCases+"-->"+
+				correctEventCases);
+		System.out.println("Unknown-->"+unknownCases+"-->"+
+				correctUnknownCases);
 		System.out.println(precision);
 	}
 
+	// This funtion takes a file as an argument and extracts the data
+	// pertaining to the word groups in the file
 	public void extractChunks(File file) {
 
 		ArrayList<String> chunk = new ArrayList<String>();
@@ -146,15 +160,6 @@ public class TestClassifier {
 
 
 					rationalizeDrel();
-					// rationalizePreposition();
-					// System.out.println(anaphoraString + "," + drel + "," +
-					// root
-					// + "," + pos + "," + gender + "," + number + ","
-					// + person + "," + relation + "," +preposition+","+
-					// position + ","
-					// + lastword + "," + result);
-					//
-					
 					prediction();
 					totalPredictions++;
 					if(result.equalsIgnoreCase("N")==true)
@@ -164,22 +169,36 @@ public class TestClassifier {
 					if(result.equalsIgnoreCase("U")==true)
 						unknownCases++;
 					
-					String ruleResult=applyRulesAnaphoraRoot(root);
-					boolean kiRule=applyRulesForKi(file,sentenceID,chunkID);
-					if(ruleResult.equalsIgnoreCase("N")==true)
+					String ruleResult=applyRulesAnaphoraRoot(
+							root);
+					boolean kiRule=applyRulesForKi(
+							file,sentenceID,chunkID);
+					if(ruleResult.equalsIgnoreCase("N")
+							==true)
 						predictedResult="N";
-					if(ruleResult.equalsIgnoreCase("V")==true)
+					if(ruleResult.equalsIgnoreCase("V")
+							==true)
 						predictedResult="V";
 					if(kiRule==true)
 						predictedResult="V";
 					System.out.println(predictedResult);
-					if(predictedResult.equalsIgnoreCase("N")==true && result.equalsIgnoreCase("N")==true)
+					if(predictedResult.equalsIgnoreCase("N")
+							==true && 
+							result.equalsIgnoreCase(
+								"N")==true)
 						correctEntityCases++;
-					if(predictedResult.equalsIgnoreCase("V")==true && result.equalsIgnoreCase("V")==true)
+					if(predictedResult.equalsIgnoreCase("V")
+							==true && 
+							result.equalsIgnoreCase(
+								"V")==true)
 						correctEventCases++;
-					if(predictedResult.equalsIgnoreCase("U")==true && result.equalsIgnoreCase("U")==true)
+					if(predictedResult.equalsIgnoreCase("U")
+							==true && 
+							result.equalsIgnoreCase(
+								"U")==true)
 						correctUnknownCases++;
-					if(predictedResult.equalsIgnoreCase(result)==true)
+					if(predictedResult.equalsIgnoreCase(
+								result)==true)
 						correctPredictions++;
 					else
 						System.out.println("incorrect");
@@ -191,20 +210,9 @@ public class TestClassifier {
 		}
 
 	}
-
-	public void rationalizePreposition() {
-
-		if (preposition.equalsIgnoreCase("X") == false
-				&& preposition.equalsIgnoreCase("0") == false
-				&& preposition.equalsIgnoreCase("meM") == false
-				&& preposition.equalsIgnoreCase("ne") == false
-				&& preposition.equalsIgnoreCase("ke") == false
-				&& preposition.equalsIgnoreCase("kA") == false
-				&& preposition.equalsIgnoreCase("ko") == false
-				&& preposition.equalsIgnoreCase("se") == false)
-			preposition = preposition + "__OTH";
-	}
-
+	
+       	// This function is used to set a fixed value to the cases that belong
+	// to the minority group in the feature of dependency relation	
 	public void rationalizeDrel() {
 
 		if (drel.equalsIgnoreCase("k1") == false
@@ -218,7 +226,9 @@ public class TestClassifier {
 			drel = "OTH";
 
 	}
-
+	
+	// This function is used to set a value of 'X' in case if that feature
+	// is missing from the original SSF file
 	public void checkForNullValues() {
 
 		if (gender.equalsIgnoreCase("") == true)
@@ -232,14 +242,20 @@ public class TestClassifier {
 		if (preposition.equalsIgnoreCase("") == true)
 			preposition = "X";
 	}
-
+	
+	// This funtion is used to initialize all the features to a null values
+	// so that the old values of the extracted features does not interfere
+	// with the new values to be extracted
 	public void initializeAllFeatures() {
 
-		anaphoraString = chunkID=drel = root = pos = gender = number = person = relation = preposition = lastword = result = "";
+		anaphoraString = chunkID=drel = root = pos = gender = number = 
+			person = relation = preposition = lastword = result = "";
 		position = 0;
 
 	}
-
+	
+	// This function is used to test if the word group passed as an argument
+	// has an anaphora or not
 	public boolean checkForAnaphora(ArrayList<String> chunk) {
 
 		for (int i = 0; i < chunk.size(); i++) {
@@ -249,7 +265,8 @@ public class TestClassifier {
 		}
 		return false;
 	}
-
+	
+	// This function is used to extract the features out for an anaphora
 	public void getContentForArff(ArrayList<String> chunk) {
 
 		for (int i = 0; i < chunk.size(); i++) {
@@ -266,7 +283,8 @@ public class TestClassifier {
 					if(word.equalsIgnoreCase("name=")==true){
 						chunkID=scn.next();
 					}
-					if (word.equalsIgnoreCase("drel=") == true) {
+					if (word.equalsIgnoreCase("drel=") == 
+							true) {
 						drel = scn.next();
 					}
 				}
@@ -280,7 +298,8 @@ public class TestClassifier {
 				while (scn.hasNext()) {
 
 					String word = scn.next();
-					if (word.equalsIgnoreCase("af=") == true) {
+					if (word.equalsIgnoreCase("af=") == 
+							true) {
 						root = scn.next();
 						pos = scn.next();
 						gender = scn.next();
@@ -290,16 +309,21 @@ public class TestClassifier {
 						scn.next();
 						preposition = scn.next();
 					}
-					if (word.equalsIgnoreCase("name=") == true)
+					if (word.equalsIgnoreCase("name=") == 
+							true)
 						anaphoraString = scn.next();
 
-					if (word.equalsIgnoreCase("posn=") == true)
-						position = Integer.parseInt(scn.next());
+					if (word.equalsIgnoreCase("posn=") == 
+							true)
+						position = Integer.parseInt(
+								scn.next());
 
-					if (word.equalsIgnoreCase("reftype=") == true) {
+					if (word.equalsIgnoreCase("reftype=") 
+							== true) {
 						result = scn.next();
 						i++;
-						if (chunk.get(i).contains("))") == true)
+						if (chunk.get(i).contains("))") 
+								== true)
 							lastword = "Y";
 						else
 							lastword = "N";
@@ -311,7 +335,9 @@ public class TestClassifier {
 		}
 
 	}
-
+	
+	// This function is used to test a given instance with the training
+	// model already formed
 	public void prediction(){
 		
 		instance.setValue(test.attribute(0), anaphoraString);
@@ -343,7 +369,13 @@ public class TestClassifier {
 		System.out.println(anaphoraString+"---->"+root);
 		System.out.print(result+"-->");
 	}
-	public boolean applyRulesForKi(File file,String sentenceID,String chunkID){
+
+	// This function takes the file, the sentence ID of the sentence
+	// containing the anaphora and the chunk ID of the wordgroup containing
+	// the anaphora as the arguments and checks if the anaphora has a direct
+	// dependency relation with the 'ki' word used in the sentence
+	public boolean applyRulesForKi(File file,String sentenceID,
+			String chunkID){
 		Scanner scn=null;
 		try {
 			scn=new Scanner(file);
@@ -356,8 +388,14 @@ public class TestClassifier {
 				line=scn.nextLine();
 				while(line.contains("Sentence")==false){
 					line=scn.nextLine();
-					if(line.contains("CCP")==true && line.contains(String.format("drel='rs:%s'", chunkID))==true){
-						System.out.println("enter condition");
+					if(line.contains("CCP")==true && 
+							line.contains(
+								String.format(
+								"drel='rs:%s'", 
+								chunkID))==true){
+						System.out.println(
+								"enter condition"
+								);
 						return true;
 					}
 				}
@@ -366,6 +404,9 @@ public class TestClassifier {
 		}
 		return false;
 	}
+
+	// This function is used to apply the rule based learning on the
+	// instances based on the roots of the anaphora
 	public String applyRulesAnaphoraRoot(String root){
 		
 		if(root.equalsIgnoreCase("हम")==true ||

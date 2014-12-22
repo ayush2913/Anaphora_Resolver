@@ -1,6 +1,4 @@
 package com.prabal.anaphoraResolution;
-//class for training model build 
-
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -17,7 +15,8 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
-
+// This class is designed to building a hypothesis model from the training data.
+// The Weka learning tool kit is used (based on Naive Bayes learning)
 public class BuildingClassifierModel {
 
 	public FilteredClassifier fc = new FilteredClassifier();
@@ -25,8 +24,8 @@ public class BuildingClassifierModel {
 	
 	public  FilteredClassifier train(String path){
      
-       try
-       {                   
+        try
+        {                   
            DataSource train_source = new DataSource(path);
            Instances train = train_source.getDataSet();             
            int cIdx_train=train.numAttributes()-1;
@@ -58,9 +57,11 @@ public class BuildingClassifierModel {
           
            //fc.setFilter(rm);
            //fc.setClassifier(adt);
-           fc.buildClassifier(train);  //path for WEKA model 
-          ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("train.model")); 
-          oos.writeObject(fc);
+           fc.buildClassifier(train);  
+	   //path for WEKA model provided in next line 
+           ObjectOutputStream oos = new ObjectOutputStream(new 
+			  FileOutputStream("train.model")); 
+           oos.writeObject(fc);
            oos.flush();
            oos.close();
            System.out.println("training done");

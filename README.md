@@ -118,3 +118,49 @@ Using the tool:
 
   	`gen.openFolder();`
 
+Components of the Anaphora Resolver
+-----------------------------------
+
+## Anaphora Classifier
+
+These classes can be used for the complete testing and model building using the
+training data. This component consists of 3 classes, each designed for specfic
+purpose.
+
+1. **AnaphoraClassifierArff**
+
+  Make an object of the class and pass the path to the training file
+  folder and then call the following functions in series.
+  (Note that this component is still in the development phase and we will try to
+  remove such function callings in the final module)
+
+	AnaphoraClassifierArff train = new AnaphoraClassifierArff("Path to the
+			training directory");
+	train.designstructureOfArff();
+	train.designFormat();
+	train.getFileList();
+	train.getFileContent();
+
+2. **BuildingClassifierModel**
+
+  Make an object of this class and pass the training file (.arff) to the function
+  called after the object initialization
+
+	BuildingClassifierModel model = new BuildingClassifierModel();
+	model.train("path to the training file (.arff)");
+
+3. **TestClassifier**
+
+  Make an object of this class and pass the path to the directory containing the
+  test files and then call a number of functions in series.
+  (Note that this component is still in the development phase and we will try to
+  remove such function callings in the final module)
+
+	TestClassifier test = new TestClassifier("Path to the directory
+			containing the test files");
+	test.readModel();
+	test.getFileList();
+	test.getFileContent();
+	test.displayResults();
+
+  Hence, the results of the classifer will be displayed in the end.
