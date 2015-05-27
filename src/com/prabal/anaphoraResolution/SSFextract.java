@@ -23,10 +23,15 @@ public class SSFextract {
 		callExtractFunctions();
 	}
 	
+	public static void main(String args[]){
+		SSFextract ob = new SSFextract("6.1	यह	PRP	<fs af='यह,pn,any,sg,3,d,0,0' name='यह' posn='80' reftype='V' ref='VGF3' ref='VGF3'>");
+	}
+	
 	// This function is used to call two different functions depending upon
 	// the type of line (header or non-header)
 	public void callExtractFunctions(){
-		if(inputLine.contains("drel=") == true && 
+		if((inputLine.contains("drel=") == true ||
+				inputLine.contains("stype=") == true)&& 
 				inputLine.contains("((")==true)
 			extractMembersHead(inputLine);
 		else
@@ -59,7 +64,8 @@ public class SSFextract {
 	public void extractMembersNonHead(String line){
 		Scanner scn = new Scanner(line);
 		scn.useDelimiter("\t|:|\\s|'|,");
-		scn.next();scn.next();
+		scn.next();
+		word = scn.next();
 		subPosTag = scn.next();
 		while(scn.hasNext()){
 			String wrd = scn.next();
@@ -73,8 +79,6 @@ public class SSFextract {
 				tamHindi = scn.next();
 				tamWx = scn.next();
 			}
-			if(wrd.equalsIgnoreCase("name=")==true)
-				word = scn.next();
 			if(wrd.equalsIgnoreCase("posn=")==true){
 				position = Integer.parseInt(scn.next());
 				position = (int) (position*0.1);

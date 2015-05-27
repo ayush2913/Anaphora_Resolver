@@ -1,6 +1,5 @@
 package com.prabal.anaphoraResolution;
 
-import java.awt.ScrollPane;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 // This class is used to create visual trees for a group of text files with the

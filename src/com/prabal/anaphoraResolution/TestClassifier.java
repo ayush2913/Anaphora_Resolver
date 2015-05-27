@@ -66,7 +66,7 @@ public class TestClassifier {
 		try {
 			ObjectInputStream oin = new ObjectInputStream(new 
 					FileInputStream(
-						"train.model"));// TRAINED MODEL
+						"train_old.model"));// TRAINED MODEL
 			fClass = (FilteredClassifier) oin.readObject();
 			test_source = new DataSource( // File for structure
 					"trainStructure.arff");
@@ -158,7 +158,7 @@ public class TestClassifier {
 				getContentForArff(chunk);
 				checkForNullValues();
 
-
+				System.out.println(result);
 					rationalizeDrel();
 					prediction();
 					totalPredictions++;
@@ -365,7 +365,7 @@ public class TestClassifier {
 			e.printStackTrace();
 		}
 		predictedResult = test.classAttribute().value((int) pred);
-		
+		System.out.println("pred"+predictedResult);
 		System.out.println(anaphoraString+"---->"+root);
 		System.out.print(result+"-->");
 	}

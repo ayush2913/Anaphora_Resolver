@@ -1,5 +1,7 @@
 package com.prabal.anaphoraResolution;
 
+//import in.ac.iitb.cfilt.jhwnl.JHWNLException;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,25 +27,25 @@ public class MainEventResolver{
 			m = trainingDataSize;
 			EventResolverTraining train = new
 				EventResolverTraining("/media/DriveE/NLP/dataFiles/"
-						+"train/", m);
+						+"train", m);
 			EventResolverBuildModel model = new EventResolverBuildModel();
 			model.train("eventTrain.arff");
-			EventResolverTesting testTrain = new EventResolverTesting(
-					"/media/DriveE/NLP/dataFiles/"
-						+"train/",
-					m);
+//			EventResolverTesting testTrain = new EventResolverTesting(
+//					"/media/DriveE/NLP/dataFiles/"
+//						+"train/",
+//					m);
 			EventResolverTesting testCV = new EventResolverTesting("/media/"
-					+ "DriveE/NLP/dataFiles/test/", 0);
-			System.out.println(m+","+testTrain.costFunctionValue+
-					","+testCV.costFunctionValue);
-			try {
-				FileWriter fw = new FileWriter("learningDataEvent.csv", true);
-				fw.write(m+","+testTrain.costFunctionValue+
-					","+testCV.costFunctionValue+"\n");
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+					+ "DriveE/NLP/dataFiles/test", 0);
+//			System.out.println(m+","+testTrain.costFunctionValue+
+//					","+testCV.costFunctionValue);
+//			try {
+//				FileWriter fw = new FileWriter("learningDataEvent.csv", true);
+//				fw.write(m+","+testTrain.costFunctionValue+
+//					","+testCV.costFunctionValue+"\n");
+//				fw.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
 			break;
 		}
 	}

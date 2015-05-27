@@ -1,0 +1,22 @@
+@relation 'anaphora-antecedent'
+
+@attribute anaphora_name string
+@attribute anaphora_gender {m,f,any,X}
+@attribute anaphora_number {sg,pl,any,X}
+@attribute anaphora_person {1,1h,2,2h,3,3h,any,X}
+@attribute anaphora_TAM {0,meM,ne,ke,kA,ko,kO,se,me,eM,X}
+@attribute anaphora_case {d,o,any,X}
+@attribute anaphora_drel{k1,k2,k7,k7p,k7a,k7t,r6,nmod,vmod,OTH}
+@attribute anaphora_only_member {1,0}
+@attribute antecedent_gender {m,f,any,X}
+@attribute antecedent_number {sg,pl,any,X}
+@attribute antecedent_person {1,1h,3,3h,2,2h,any,X}
+@attribute antecedent_case {o,d,any,X}
+@attribute verbal_group_distance numeric
+@attribute main_verb {1,0}
+@attribute sentential_distance numeric
+@attribute NP_overlapping numeric
+@attribute class {1,0}
+
+@data
+

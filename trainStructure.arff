@@ -1,7 +1,7 @@
 @relation 'anaphora-antecedent'
 
 @attribute anaphora string
-@attribute tree_relation {k1,k2,k7,k7p,k7t,r6,nmod,vmod,OTH}
+@attribute tree_relation{k1,k2,k7,k7p,k7t,r6,nmod,vmod,OTH}
 @attribute gender {m,f,any,X}
 @attribute number {sg,pl,any,X}
 @attribute person {1,1h,3,3h,2,2h,any,X}

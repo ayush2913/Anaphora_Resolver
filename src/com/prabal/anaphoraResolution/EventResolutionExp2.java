@@ -6,27 +6,33 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class EventResolutionExp2 {
-	String inputDir;
+	File inputFile;
 	ArrayList<ArrayList<String>>fileVerbRelations;
 	ArrayList<ArrayList<String>>relationDegree;
 	
-	EventResolutionExp2(String dirName){	
-		inputDir = dirName;
+	EventResolutionExp2(File inpFile){	
+		inputFile = inpFile;
 		relationDegree = new ArrayList<ArrayList<String>>();
 		fileVerbRelations = new ArrayList<ArrayList<String>>();
-	}
-	
-	public void openDir() throws FileNotFoundException{
-		File f = new File(inputDir);
-		File[] fileList = f.listFiles();
-		for(int i=0;i<fileList.length;i++){
-			System.out.println(fileList[i].getName());
-			openFiles(fileList[i]);
-			getResults();
-			relationDegree = new ArrayList<ArrayList<String>>();
-			fileVerbRelations = new ArrayList<ArrayList<String>>();
+		try{
+		openFiles(inputFile);
+		getResults();
+		}catch(Exception e){
+			System.out.println("file not found !");
 		}
 	}
+	
+	//public void openFile() throws FileNotFoundException{
+	//	File f = new File(inputDir);
+	//	File[] fileList = f.listFiles();
+	//	for(int i=0;i<fileList.length;i++){
+	//		System.out.println(fileList[i].getName());
+	//		openFiles(fileList[i]);
+	//		getResults();
+	//		relationDegree = new ArrayList<ArrayList<String>>();
+	//		fileVerbRelations = new ArrayList<ArrayList<String>>();
+	//	}
+	//}
 	
 	public void getResults(){
 		for(int i=0;i<fileVerbRelations.size();i++){
@@ -35,9 +41,9 @@ public class EventResolutionExp2 {
 			relationDegree.add(sent);
 		}
 		getInterSentenceRelations(fileVerbRelations);
-		for(int i=0;i<relationDegree.size();i++){
-			System.out.println(relationDegree.get(i));
-		}
+	//	for(int i=0;i<relationDegree.size();i++){
+	//		System.out.println(relationDegree.get(i));
+	//	}
 	}
 	public void getInterSentenceRelations(ArrayList<ArrayList<String>> verbRelations){
 		int counter=0;
@@ -146,16 +152,16 @@ public class EventResolutionExp2 {
 		}
 		return words;
 	}
-	public ArrayList<String> getHeaders(ArrayList<String>sentenceContent,String headID){
-		ArrayList<String> header = new ArrayList<String>();
-		for(int i=0;i<sentenceContent.size();i++){
-			System.out.println("entered");
-			if(sentenceContent.get(i).matches(String.format("(.*)drel=(.*):%s(.*)", headID))==true){
-				System.out.println(sentenceContent.get(i));
-			}
-		}
-		return header;
-	}
+			//public ArrayList<String> getHeaders(ArrayList<String>sentenceContent,String headID){
+	//	ArrayList<String> header = new ArrayList<String>();
+	//	for(int i=0;i<sentenceContent.size();i++){
+	//		System.out.println("entered");
+	//		if(sentenceContent.get(i).matches(String.format("(.*)drel=(.*):%s(.*)", headID))==true){
+	//			System.out.println(sentenceContent.get(i));
+	//		}
+	//	}
+	//	return header;
+	//}
 	public String getChunkID(String line){
 		Scanner sc = new Scanner(line);
 		sc.useDelimiter("\t|\\s|'");

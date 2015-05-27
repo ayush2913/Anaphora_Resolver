@@ -50,28 +50,42 @@ public class GenerateTextFiles {
 		while(scn.hasNext()){
 			String line = scn.nextLine();
 			if(line.contains("</Sentence>")==true){
-				System.out.println();
+				//System.out.println();
 				fmt.format("\n");
 			}
 			if(line.contains("))")==true){
-				System.out.print("))"+" ");
+				//System.out.print("))"+" ");
 				fmt.format(")) ");
 			}
+//			if(line.contains("\tVGF\t")==true){
+//				System.out.print("(( x ))"+" ");
+//				fmt.format("(( %s ))", "x");
+//				while(line.contains("))")==false)
+//					{
+//					line = scn.nextLine();
+//					}
+//				continue;
+//			}
 			if(line.contains("fs ")==true && 
 					line.contains("Sentence")==false && 
-					line.isEmpty()==false){
+					line.isEmpty()==false && !line.contains("head")){
 				Scanner s = new Scanner(line);
-				s.useDelimiter("\t|\\s");
 				s.next();
+				//s.useDelimiter("\t|\\s");
 				String word = s.next();
 				if(word.equalsIgnoreCase("।")==true || 
 					       word.equalsIgnoreCase(".")==true){
-					System.out.print(word+" ");
 					fmt.format("%s ", word);
 				}
 				else{
-					System.out.print(word+" ");
-					fmt.format("%s ", word);
+					if(line.contains("reftype='V'")==true){
+						System.out.print(word+" ANA ");
+						fmt.format("%s ANA", word);
+					}
+					else{
+						System.out.print(word+" ");
+						fmt.format("%s ", word);
+					}
 				}
 			}
 				

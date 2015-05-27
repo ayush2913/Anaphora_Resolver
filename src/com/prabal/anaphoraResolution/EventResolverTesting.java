@@ -1,5 +1,14 @@
 package com.prabal.anaphoraResolution;
 
+//import in.ac.iitb.cfilt.jhwnl.JHWNL;
+//import in.ac.iitb.cfilt.jhwnl.JHWNLException;
+//import in.ac.iitb.cfilt.jhwnl.data.IndexWord;
+//import in.ac.iitb.cfilt.jhwnl.data.IndexWordSet;
+//import in.ac.iitb.cfilt.jhwnl.data.Pointer;
+//import in.ac.iitb.cfilt.jhwnl.data.PointerType;
+//import in.ac.iitb.cfilt.jhwnl.data.Synset;
+//import in.ac.iitb.cfilt.jhwnl.dictionary.Dictionary;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -20,6 +29,8 @@ public class EventResolverTesting{
 	String anaName, anaGender, anaNumber, anaPerson, anaTam, anaCase,
 	       anaDrel, anaChunkID, anaRef;
 	String antGender, antNumber, antPerson, antCase, antSentence, antChunkID;
+	//String antVerbType;
+	String antecedentString;
 	int sententialDist, verbalDist, antOverlap;
 	String onlyMember, mainVerb;
 	String antClassValue;
@@ -87,6 +98,8 @@ public class EventResolverTesting{
 
 	public void initializeAntecedentValues(){
 		antGender = antNumber = antPerson = antCase = "";
+				//antVerbType= "";
+		antecedentString = "";
 		sententialDist = antOverlap = 0;
 		mainVerb = antClassValue= "0";
 	}
@@ -97,7 +110,7 @@ public class EventResolverTesting{
 		if(dataSize < 10)
 			dataSize = fileList.length;
 		for(int i = 0; i< dataSize; i++){
-			//System.out.println("\n"+fileList[i].getName());
+			System.out.println(fileList[i].getName());
 			openFiles(fileList[i]);
 		}
 	}
@@ -211,6 +224,73 @@ public class EventResolverTesting{
 				ante.get(0).contains("name=")){
 			mainVerb = "1";	
 		}
+		Scanner s = new Scanner(ante.get(1));
+		s.useDelimiter("\t");
+		s.next();
+		antecedentString = s.next();
+//		JHWNL.initialize();
+//		long[] synsetOffsets;
+//		
+//		try {
+//				//	 Look up the word for all POS tags
+//				IndexWordSet demoIWSet = Dictionary.getInstance().lookupAllIndexWords(antecedentString);				
+//				//	 Note: Use lookupAllMorphedIndexWords() to look up morphed form of the input word for all POS tags				
+//				IndexWord[] demoIndexWord = new IndexWord[demoIWSet.size()];
+//				demoIndexWord  = demoIWSet.getIndexWordArray();
+//				for ( int i = 0;i < demoIndexWord.length;i++ ) {
+//					int size = demoIndexWord[i].getSenseCount();
+//					//System.out.println("Sense Count is " + size);	
+//					synsetOffsets = demoIndexWord[i].getSynsetOffsets();
+////					for ( int k = 0 ;k < size; k++ ) {
+////						System.out.println("Offsets[" + k +"] " + synsetOffsets[k]);	
+////					}
+//
+//					Synset[] synsetArray = demoIndexWord[i].getSenses(); 
+//						//System.out.println("Synset [" + k +"] "+ synsetArray[k]);
+//						//System.out.println("Synset POS: " + synsetArray[k].getPOS());
+//						Pointer[] pointers = synsetArray[0].getPointers();
+//						//System.out.println("Synset Num Pointers:" + pointers.length);
+//						if(pointers[0].getType().equals(PointerType.ONTO_NODES)) {	// For ontology relation
+//							String temp = pointers[0].getType() + " : "  + Dictionary.getInstance().getOntoSynset(pointers[0].getOntoPointer()).getOntoNodes();
+//							if (temp.contains("(Verb)")){
+//								//System.out.println(pointers[0].getType() + " : "  + Dictionary.getInstance().getOntoSynset(pointers[0].getOntoPointer()).getOntoNodes());
+//								if(temp.contains("VOS-PHY-ST"))
+//									antVerbType = "VOS-PHY-ST";
+//								else if(temp.contains("VOS-MNT-ST"))
+//									antVerbType ="VOS-MNT-ST";
+//								else if(temp.contains("VOA-COMM"))
+//									antVerbType ="VOA-COMM";
+//								else if(temp.contains("VOA-ACT"))
+//									antVerbType ="VOA-ACT";
+//								else if(temp.contains("VOO"))
+//									antVerbType ="VOO";
+//								else if(temp.contains("VOA-"))
+//									antVerbType ="OTH";
+//								else if(temp.contains("VOS"))
+//									antVerbType ="VOS";
+//								else if(temp.contains("bodily action"))
+//									antVerbType = "BOA";
+//							}
+//						}
+////						for (int j = 0; j < pointers.length; j++) {							
+////							if(pointers[j].getType().equals(PointerType.ONTO_NODES)) {	// For ontology relation
+////								String temp = pointers[j].getType() + " : "  + Dictionary.getInstance().getOntoSynset(pointers[j].getOntoPointer()).getOntoNodes();
+////								if (temp.contains("(Verb)")){
+////									System.out.println(pointers[j].getType() + " : "  + Dictionary.getInstance().getOntoSynset(pointers[j].getOntoPointer()).getOntoNodes());
+////									break;
+////								}
+////							} //else {
+////								//System.out.println(pointers[j].getType() + " : "  + pointers[j].getTargetSynset());
+////							//}							
+////						}
+//						
+//				}
+//		} catch (JHWNLException e) {
+//			System.err.println("Internal Error raised from API.");
+//			e.printStackTrace();
+//		}
+//		if(antVerbType.equalsIgnoreCase(""))
+//			antVerbType = "X";
 		SSFextract anteHead = new SSFextract(ante.get(0));
 		antChunkID = anteHead.headChunkID;
 		for(int i = 1; i < ante.size(); i++){
@@ -302,7 +382,8 @@ public void prediction(){
 		instance.setValue(test.attribute(12), verbalDist);
 		instance.setValue(test.attribute(13), mainVerb);
 		instance.setValue(test.attribute(14), sententialDist);
-		//instance.setValue(test.attribute(15), antOverlap);
+		instance.setValue(test.attribute(15), antOverlap);
+		//instance.setValue(test.attribute(16), antVerbType);
 		try {
 			pred = fClass.classifyInstance(instance);
 		} catch (Exception e) {
